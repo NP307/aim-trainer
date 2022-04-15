@@ -12,7 +12,7 @@ class App extends React.Component {
       aimBlockColor: 'blue',
       positionX: null,
       positionY: null,
-      pos: null
+      aimBlock: 'auto'
     };
     this.stopPosition = this.stopPosition.bind(this);
   }
@@ -34,21 +34,23 @@ class App extends React.Component {
           state.positionX = Math.round(Math.random() * state.maxWidth);
           state.positionY = Math.round(Math.random() * state.maxHeight);
         })
-      }, 1000),
+      }, 500),
     });
   }
 
   stopPosition() {
-    clearInterval(this.state.pos);
-    this.setState({
-      aimBlockColor: 'red',
-    });
-    setTimeout(() => {
-      this.startPosition();
       this.setState({
-        aimBlockColor: 'blue',
+          aimBlockColor: 'red',
+          aimBlock: 'none'
       });
-    }, 5000);
+      clearInterval(this.state.pos);
+    setTimeout(() => {
+        this.setState({
+            aimBlockColor: 'blue',
+            aimBlock: 'auto',
+        });
+        this.startPosition();
+    }, 2000);
 
   }
 
@@ -63,6 +65,7 @@ class App extends React.Component {
       left: positionX,
       top: positionY,
       transform: 'translate(-' + aimBlockWidth / 2 + 'px, -' + aimBlockHeight / 2 + 'px)',
+      pointerEvents: this.state.aimBlock,
     };
 
     const aimWrapper = {
@@ -76,7 +79,7 @@ class App extends React.Component {
     return (
         <>
           <div style={aimWrapper}>
-            <div style={aimBlock} onClick={this.stopPosition} />
+            <div className='aimBlock' style={aimBlock} onClick={this.stopPosition} />
           </div>
         </>
     );
